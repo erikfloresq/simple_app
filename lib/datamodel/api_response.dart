@@ -13,3 +13,4 @@ class APIResponse {
   Map<String, dynamic> toJson() =>
       {'characters': characters, 'locations': locations, 'episodes': episodes};
 }
+//demo
