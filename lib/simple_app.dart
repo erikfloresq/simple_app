@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:simple_app/characters_list.dart';
+import 'package:simple_app/datamodel/api_response.dart';
 import 'package:simple_app/favorite_list.dart';
+import 'repository/repository.dart';
 
 class SimpleApp extends StatelessWidget {
   const SimpleApp({super.key});
