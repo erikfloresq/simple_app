@@ -1,23 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:simple_app/datamodel/api_response.dart';
+import 'package:simple_app/repository/repository.dart';
 
-class CharactersList extends StatelessWidget {
+class CharactersList extends StatefulWidget {
   const CharactersList({super.key});
 
-  get characters => ['rick', 'morty', 'erik'];
+  @override
+  State<CharactersList> createState() {
+    return _CharactersListState();
+  }
+}
+
+class _CharactersListState extends State<CharactersList> {
+  Repository repository = Repository();
+  late Future<APIResponse> apiResponse;
+
+  @override
+  void initState() {
+    super.initState();
+    apiResponse = repository.loadResponse();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: _getCharacters(),
+    return FutureBuilder<APIResponse>(
+      future: apiResponse,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text('$snapshot.error');
+        }
+        return ListView(
+            children: [
+              CharacterRow(name: snapshot.data?.characters ?? ''),
+              CharacterRow(name: snapshot.data?.locations ?? ''),
+              CharacterRow(name: snapshot.data?.episodes ?? '')
+              ]
+          );
+      },
     );
-  }
-
-  List<CharacterRow> _getCharacters() {
-    return characters
-        .map<CharacterRow>((e) => CharacterRow(
-              name: e,
-            ))
-        .toList();
   }
 }
 
@@ -30,12 +50,12 @@ class CharacterRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Container(
-        padding: EdgeInsets.symmetric(vertical: 6),
+        padding: const EdgeInsets.symmetric(vertical: 6),
         width: 50,
-        child: Placeholder(),
+        child: const Placeholder(),
       ),
       title: Text(name),
-      trailing: Icon(Icons.star),
+      trailing: const Icon(Icons.star),
     );
   }
 }
